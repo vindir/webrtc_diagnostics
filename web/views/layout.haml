@@ -1,0 +1,30 @@
+!!! 5
+%html
+  %head
+    %title Mojo Lingo WebRTC Diagnostics Tool
+    = stylesheet_link_tag "style"
+    = bootstrap_assets
+    %script{ src: "//code.jquery.com/jquery-1.10.2.min.js" }
+    %script{ src: "/javascripts/scripts.js" }
+  %body
+    .container
+      .row-fluid
+        .span12
+          %h1 Mojo Lingo's WebRTC Diagnostics Tool
+      .row-fluid
+        .span12
+          .tabbable.tabs-left
+            %ul.nav.nav-tabs
+              %li.active
+                %a{ href: '#overall', data: { toggle: 'tab' } } Overall
+              %li
+                %a{ href: '#local', data: { toggle: 'tab' } } Local
+              %li
+                %a{ href: '#external', data: { toggle: 'tab' } } External
+            .tab-content
+              #overall.tab-pane.active
+                %p Overall info here
+              #local.tab-pane
+                %p Local info here
+              #external.tab-pane
+                %p External info here

@@ -1,0 +1,41 @@
+body {
+  background-image: url('/images/retina_wood.png');
+  background-repeat: repeat;
+}
+
+ul.nav.nav-tabs {
+  border-right: 0;
+}
+
+.tabbable {
+  margin-top: 20px;
+}
+
+.tabs-left > .nav.nav-tabs {
+  margin-right: 0;
+}
+
+.tab-content {
+  padding-left: 20px;
+  background-color: rgba(224,196,155,0.5);
+  padding-top: 9px;
+  color: rgb(121, 69, 21);
+}
+
+.tabs-left > .nav-tabs .active > a {
+  background-color: rgba(224,196,155,0.5);
+  border-color: rgba(224,196,155,0.5) transparent rgba(187, 156, 111, 0.5) rgba(224, 196, 155, 0.5) !important;
+  color: rgba(253, 247, 237, 1);
+}
+
+.tabs-left > .nav-tabs > li > a {
+  background-color: rgba(187, 165, 134, 0.5);
+  color: #818181;
+  border-bottom-color: rgba(162, 143, 117, 0.5);
+}
+
+.tabs-left > .nav-tabs > li > a:hover, tabs-left > .nav-tabs > li > a:focus {
+  background-color: #96172e;
+  color: rgba(253, 247, 237, 0.92);
+  border-color: transparent !important;
+}
