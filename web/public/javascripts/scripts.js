@@ -19,12 +19,15 @@ function adjust_content_pane_height() {
 }
 
 function runDiagnosticsTest(test_object) {
-  document.addEventListener('error_event', function(e) {
+  document.addEventListener('error_event', function() {
     $('.test-messages').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
   }, false);
-  document.addEventListener('passing_event', function(e) {
+  document.addEventListener('passing_event', function() {
     $('.test-messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
   }, false);
+  document.addEventListener('webcam_access', function() {
+
+  })
   if(test_object.testWebRTCReadiness()) {
     // Continue with the test if we're in a WebRTC-enabled browser
     // Find webcam

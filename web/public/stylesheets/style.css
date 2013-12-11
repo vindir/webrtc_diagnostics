@@ -39,3 +39,11 @@ ul.nav.nav-tabs {
   color: rgba(253, 247, 237, 0.92);
   border-color: transparent !important;
 }
+
+.message.passing > p {
+  color: green;
+}
+
+.message.error > p {
+  color: rgb(172, 36, 36);
+}

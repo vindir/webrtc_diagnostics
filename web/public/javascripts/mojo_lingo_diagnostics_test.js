@@ -1,5 +1,9 @@
 var error_event = new Event('error_event');
 var passing_event = new Event('passing_event');
+var warning_event = new Event('warning_event');
+
+var webcam_access = new Event('webcam_access');
+
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia; // So we don't have to keep checking for vendor prefixes.
 
 function DiagnosticsTest() {
@@ -46,6 +50,7 @@ DiagnosticsTest.prototype.getWebcam = function() {
       // Success
       scope.passing.push("Able to reach a webcam.");
       document.dispatchEvent(passing_event);
+      document.dispatchEvent(webcam_access);
       scope.testWebcam(stream);
   }, function() {
     // Failure
@@ -62,10 +67,10 @@ DiagnosticsTest.prototype.getMicrophone = function() {
     // Success
     scope.passing.push("Able to reach a microphone.");
     document.dispatchEvent(passing_event);
-    // scope.testMicrophone(stream);
+    scope.testMicrophone(stream);
   }, function() {
     // Failure
-    scope.errors.push("Unable to reach a microphone. Is there one plugged in? Is it enabled?");
+    scope.errors.push("Unable to reach a microphone. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
   });
 }
@@ -87,9 +92,7 @@ DiagnosticsTest.prototype.microphoneNames = function() {
 }
 
 DiagnosticsTest.prototype.testWebcam = function(webcam, display_element, echo_element) {
-  // Attempt to access the webcam. If not, store an error.
-  this.accessWebcam(webcam);
-  // Attempt to displaya the webcam feed locally. If not, store an error.
+  // Attempt to display the webcam feed locally. If not, store an error.
   this.displayWebcam(webcam, display_element);
   // Attempt to echo the webcam feed back to ourselves via WebRTC, and ask if the user can see it. If not, store an error.
   this.echoWebcam(webcam, echo_element);
@@ -101,9 +104,10 @@ DiagnosticsTest.prototype.testWebcams = function(display_element) {
   }
 }
 
+// Return a microphone element that changes based on the volume.
 DiagnosticsTest.prototype.testMicrophone = function(microphone) {
-  // Access microphone
   // Display a feedback bar
+  $('');
   // Attempt to echo the microphone audio back to the user
   // Ask user if they can hear themselves
 }
@@ -115,6 +119,7 @@ DiagnosticsTest.prototype.accessWebcam = function(webcam) {
 
 DiagnosticsTest.prototype.displayWebcam = function(webcam, display_element) {
   // Attempt to display the webcam feed localling in specified display_element
+
   // If error, put meaningful and human-readable error message in this.errors
 }
 
@@ -145,7 +150,7 @@ DiagnosticsTest.prototype.finishTest = function() {
 // Will return an HTML element with the message formatted for display properly.
 // type wants a string of 'passing', 'error', or 'warning'
 DiagnosticsTest.prototype.displayMessage = function(message, type) {
-  var div_class = "passing " + type;
+  var div_class = "message " + type;
   var html = "<div class='" + div_class + "'><p>" + message + "</p></div>";
   return html;
 }
