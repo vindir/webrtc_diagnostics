@@ -40,28 +40,32 @@ DiagnosticsTest.prototype.findMicrophones = function() {
 
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getWebcam = function() {
+  var scope = this;
   var constraints = { video: true };
   getUserMedia.call(navigator, constraints, function(stream) {
-    // Success
-    this.passing.push("Able to reach a webcam.");
-    document.dispatchEvent(passing_event);
-    this.testWebcam(stream);
+      // Success
+      scope.passing.push("Able to reach a webcam.");
+      document.dispatchEvent(passing_event);
+      scope.testWebcam(stream);
   }, function() {
     // Failure
-    this.errors.push("Unable to reach a webcam. Is there one plugged in? Is it enabled?");
+    scope.errors.push("Unable to reach a webcam. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
   });
 }
 
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getMicrophone = function() {
+  var scope = this;
   var constraints = { audio: true };
-  getUserMedia(constraints, function(stream) {
+  getUserMedia.call(navigator, constraints, function(stream) {
     // Success
-    this.testMicrophone(stream);
+    scope.passing.push("Able to reach a microphone.");
+    document.dispatchEvent(passing_event);
+    // scope.testMicrophone(stream);
   }, function() {
     // Failure
-    this.errors.push("Unable to reach a microphone. Is there one plugged in? Is it enabled?");
+    scope.errors.push("Unable to reach a microphone. Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
   });
 }
