@@ -3,7 +3,7 @@ var tests = new Array();
 // Visual UI stuff, and then run the first test.
 $(window).ready(function() {
   adjust_content_pane_height();
-  tests[] = new DiagnosticsTest();
+  tests.push(new DiagnosticsTest());
   runDiagnosticsTest(tests[tests.length - 1]);
 });
 
@@ -19,11 +19,18 @@ function adjust_content_pane_height() {
 }
 
 function runDiagnosticsTest(test_object) {
+  document.addEventListener('error_event', function(e) {
+    $('.test-messages').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
+  }, false);
+  document.addEventListener('passing_event', function(e) {
+    $('.test-messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
+  }, false);
   if(test_object.testWebRTCReadiness()) {
     // Continue with the test if we're in a WebRTC-enabled browser
-    // Find webcams
-    test_object.findWebcams();
-    // Find microphones
+    // Find webcam
+    test_object.getWebcam();
+    // Find microphone
+    test_object.getMicrophone();
     // Access webcams
     // Access microphones
     // List out devices
