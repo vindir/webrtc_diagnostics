@@ -22,7 +22,7 @@ ul.nav.nav-tabs {
   color: rgb(121, 69, 21);
 }
 
-.tab-pane {
+#local.tab-pane {
   text-align: center;
 }
 
@@ -50,4 +50,8 @@ ul.nav.nav-tabs {
 
 .message.error > p {
   color: rgb(172, 36, 36);
+}
+
+video {
+  border: 8px solid rgb(221, 221, 221);
 }

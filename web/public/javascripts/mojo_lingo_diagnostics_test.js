@@ -76,7 +76,6 @@ DiagnosticsTest.prototype.getMicrophone = function() {
 }
 
 DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
-  // display_element = document.getElementById('local-webcam');
   // var video_source = null;
   // if (window.webkitURL) {
   //   video_source = window.webkitURL.createObjectURL(this.webcamStream);

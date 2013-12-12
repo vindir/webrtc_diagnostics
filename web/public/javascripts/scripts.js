@@ -32,6 +32,7 @@ function runDiagnosticsTest(test_object) {
   }, false);
   document.addEventListener('webcam_access', function() {
     // Now that we've accessed the webcam, switch to the local tab for video display.
+    $('.test-webcam-message').append(test_object.displayMessage('Attempting to display webcam ' + test_object.webcamLiveLabel() + '.', 'warning'));
     test_object.testWebcamLocal($('#local-webcam'));
     $('a[href=#local]').tab('show');
   })
@@ -39,10 +40,8 @@ function runDiagnosticsTest(test_object) {
   if(test_object.testWebRTCReadiness()) {
     // Continue with the test if we're in a WebRTC-enabled browser
     // Find webcam and show it
-    if (test_object.getWebcam()) {
-      $('.webcam-test-message').append(test_object.displayMessage('Attempting to display webcam...', 'warning'));
-      // testWebcamLocal is ran in the event listner that's thrown once the webcam stream is allowed.
-    }
+    test_object.getWebcam();
+    // testWebcamLocal is ran in the event listner that's thrown once the webcam stream is allowed.
     // Find microphone and show it
     test_object.getMicrophone();
     // Attempt to connect to remote client
