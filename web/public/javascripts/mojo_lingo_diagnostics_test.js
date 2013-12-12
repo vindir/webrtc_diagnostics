@@ -3,6 +3,8 @@ var passing_event = new Event('passing_event');
 var warning_event = new Event('warning_event');
 
 var webcam_access = new Event('webcam_access');
+var local_video_stream_works = new Event('local_video_stream_works');
+var local_video_stream_fails = new Event('local_video_stream_fails');
 
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia; // So we don't have to keep checking for vendor prefixes.
 
@@ -83,8 +85,24 @@ DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
   //   video_source = stream;
   // }
   // display_element.src = video_source;
-  velem = document.getElementById('local-webcam');
-  velem.src = window.webkitURL.createObjectURL(this.webcamStream)
+  var velem = document.getElementById('local-webcam');
+  velem.src = window.webkitURL.createObjectURL(this.webcamStream);
+}
+
+DiagnosticsTest.prototype.videoCheck = function(display_element) {
+  var scope = this;
+  var check_wrapper = "<div class='video-check-wrapper'><p>Can you see this video?</p><button class='yes'>yes</button><button class='no'>no</button></div>";
+  $('video#local-webcam').after($(check_wrapper));
+  $('.video-check-wrapper > button.yes').click(function() {
+    scope.passing.push("Video play back works.");
+    document.dispatchEvent(passing_event);
+    document.dispatchEvent(local_video_stream_works);
+  });
+  $('.video-check-wrapper > button.no').click(function() {
+    scope.errors.push("Video play back failed.");
+    document.dispatchEvent(error_event);
+    document.dispatchEvent(local_video_stream_fails);
+  });
 }
 
 DiagnosticsTest.prototype.testWebcamEcho = function(display_element) {

@@ -27,15 +27,28 @@ function runDiagnosticsTest(test_object) {
   document.addEventListener('error_event', function() {
     $('.test-messages').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
   }, false);
+
   document.addEventListener('passing_event', function() {
     $('.test-messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
   }, false);
+
   document.addEventListener('webcam_access', function() {
     // Now that we've accessed the webcam, switch to the local tab for video display.
     $('.test-webcam-message').append(test_object.displayMessage('Attempting to display webcam ' + test_object.webcamLiveLabel() + '.', 'warning'));
     test_object.testWebcamLocal($('#local-webcam'));
     $('a[href=#local]').tab('show');
-  })
+    test_object.videoCheck($('video#local-webcam'));
+  });
+
+  document.addEventListener('local_video_stream_works', function() {
+    $('a[href=#overall]').tab('show');
+    // and then take a picture of the camera, stop the stream, and remove the buttons
+  });
+
+  document.addEventListener('local_video_stream_fails', function() {
+    $('a[href=#overall]').tab('show');
+    // stop the stream and remove the buttons
+  });
 
   if(test_object.testWebRTCReadiness()) {
     // Continue with the test if we're in a WebRTC-enabled browser

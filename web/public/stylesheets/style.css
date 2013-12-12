@@ -55,3 +55,15 @@ ul.nav.nav-tabs {
 video {
   border: 8px solid rgb(221, 221, 221);
 }
+
+.video-check-wrapper {
+  position: relative;
+  bottom: 135px;
+  background-color: rgba(0, 0, 0, 0.35);
+  color: #ccc;
+  padding: 20px;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+}
