@@ -39,19 +39,22 @@ DiagnosticsTest.prototype.testWebRTCReadiness = function() {
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getWebcam = function() {
   var scope = this;
+  var result = null;
   var constraints = { video: true };
   getUserMedia.call(navigator, constraints, function(stream) {
-      // Success
-      scope.webcamStream = stream;
-      scope.passing.push("Webcam reached: " + scope.webcamLiveLabel());
-      document.dispatchEvent(webcam_access);
-      return true;
+    // Success
+    scope.webcamStream = stream;
+    scope.passing.push("Webcam reached: " + scope.webcamLiveLabel());
+    document.dispatchEvent(passing_event);
+    document.dispatchEvent(webcam_access);
+    result = true;
   }, function() {
     // Failure
     scope.errors.push("Unable to reach a webcam. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
-    return false;
+    result = false;
   });
+  return result;
 }
 
 // This is all we have to play with for now.
@@ -73,12 +76,16 @@ DiagnosticsTest.prototype.getMicrophone = function() {
 }
 
 DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
-  video_element = $('video.test-webcam');
-  // Attempt to display the webcam feed locally. If not, store an error.
-  video_element.src = window.URL.createObjectURL(this.webcamStream);
-  video_element.play();
-  // Attempt to echo the webcam feed back to ourselves via WebRTC, and ask if the user can see it. If not, store an error.
-  // this.echoWebcam(webcam_stream, echo_element);
+  // display_element = document.getElementById('local-webcam');
+  // var video_source = null;
+  // if (window.webkitURL) {
+  //   video_source = window.webkitURL.createObjectURL(this.webcamStream);
+  // } else {
+  //   video_source = stream;
+  // }
+  // display_element.src = video_source;
+  velem = document.getElementById('local-webcam');
+  velem.src = window.webkitURL.createObjectURL(this.webcamStream)
 }
 
 DiagnosticsTest.prototype.testWebcamEcho = function(display_element) {
@@ -122,9 +129,10 @@ DiagnosticsTest.prototype.displayMessage = function(message, type) {
 
 DiagnosticsTest.prototype.webcamLiveLabel = function() {
   // Go through each object and make sure we grab and return the live feed only.
-  for (var i = 0; i < this.webcamStream.length - 1; i++) {
-    if (this.webcamStream[i].readyState == 'live') {
-      return this.webcamStream[i].label;
+  video_tracks = this.webcamStream.getVideoTracks();
+  for (var i = 0; i <= video_tracks.length - 1; i++) {
+    if (video_tracks[i].readyState == 'live') {
+      return video_tracks[i].label;
     }
   }
 }

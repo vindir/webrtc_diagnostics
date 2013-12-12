@@ -22,6 +22,10 @@ ul.nav.nav-tabs {
   color: rgb(121, 69, 21);
 }
 
+.tab-pane {
+  text-align: center;
+}
+
 .tabs-left > .nav-tabs .active > a {
   background-color: rgba(224,196,155,0.5);
   border-color: rgba(224,196,155,0.5) transparent rgba(187, 156, 111, 0.5) rgba(224, 196, 155, 0.5) !important;
