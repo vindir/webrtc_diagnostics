@@ -9,8 +9,10 @@ var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || nav
 function DiagnosticsTest() {
   this.webcams = null; // Should hold an array of webcam names
   this.webcamError = false; // Should we care about how many webcam failures there are, or should we just stop at the first?
+  this.webcamStream = null; // Hold the webcam stream here
   this.microphones = null; // Should hold an array of microphone names
   this.microphoneError = false;
+  this.microphoneStream = null;
   this.errors = new Array(); // Should be an array of errors
   this.warnings = new Array(); // Should be an array of warnings
   this.passing = new Array(); // Should be an array of passing messages
@@ -28,19 +30,11 @@ DiagnosticsTest.prototype.testWebRTCReadiness = function() {
 }
 
 /*
-   findWebcams and findMicrophones would be much better suited to using
-   navigator.getMediaDevices() as soon as it is available and ready.
+   findWebcams and findMicrophones can be implmented once
+   navigator.getMediaDevices() is available and ready.
+
+   They would find, count, and list all available devices for testing.
 */
-
-DiagnosticsTest.prototype.findWebcams = function() {
-  // Find all connected and accessible webcams and store them in this.webcams
-  // If none are found, put a meaningful and human-readable error message in this.errors
-}
-
-DiagnosticsTest.prototype.findMicrophones = function() {
-  // Find all connected and accessible microphones and store them in this.microphones
-  // If none are found, but a meaningful and human-readable error message in this.errors
-}
 
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getWebcam = function() {
@@ -48,14 +42,15 @@ DiagnosticsTest.prototype.getWebcam = function() {
   var constraints = { video: true };
   getUserMedia.call(navigator, constraints, function(stream) {
       // Success
-      scope.passing.push("Able to reach a webcam.");
-      document.dispatchEvent(passing_event);
+      scope.webcamStream = stream;
+      scope.passing.push("Webcam reached: " + scope.webcamLiveLabel());
       document.dispatchEvent(webcam_access);
-      scope.testWebcam(stream);
+      return true;
   }, function() {
     // Failure
     scope.errors.push("Unable to reach a webcam. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
+    return false;
   });
 }
 
@@ -65,43 +60,29 @@ DiagnosticsTest.prototype.getMicrophone = function() {
   var constraints = { audio: true };
   getUserMedia.call(navigator, constraints, function(stream) {
     // Success
+    scope.microphoneStream = stream;
     scope.passing.push("Able to reach a microphone.");
     document.dispatchEvent(passing_event);
-    scope.testMicrophone(stream);
+    return true;
   }, function() {
     // Failure
     scope.errors.push("Unable to reach a microphone. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
+    return false;
   });
 }
 
-DiagnosticsTest.prototype.webcamCount = function() {
-  return this.webcams.length;
-}
-
-DiagnosticsTest.prototype.webcamNames = function() {
-  return Object.keys(this.webcams);
-}
-
-DiagnosticsTest.prototype.microphoneCount = function() {
-  return this.microphones.length;
-}
-
-DiagnosticsTest.prototype.microphoneNames = function() {
-  return Object.keys(this.microphones);
-}
-
-DiagnosticsTest.prototype.testWebcam = function(webcam, display_element, echo_element) {
+DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
+  video_element = $('video.test-webcam');
   // Attempt to display the webcam feed locally. If not, store an error.
-  this.displayWebcam(webcam, display_element);
+  video_element.src = window.URL.createObjectURL(this.webcamStream);
+  video_element.play();
   // Attempt to echo the webcam feed back to ourselves via WebRTC, and ask if the user can see it. If not, store an error.
-  this.echoWebcam(webcam, echo_element);
+  // this.echoWebcam(webcam_stream, echo_element);
 }
 
-DiagnosticsTest.prototype.testWebcams = function(display_element) {
-  for (webcam in this.webcams) {
-    this.testWebcam(webcam, display_element);
-  }
+DiagnosticsTest.prototype.testWebcamEcho = function(display_element) {
+  // Attempt to echo the webcam stream back to ourselves locally. If not, store an error.
 }
 
 // Return a microphone element that changes based on the volume.
@@ -112,25 +93,9 @@ DiagnosticsTest.prototype.testMicrophone = function(microphone) {
   // Ask user if they can hear themselves
 }
 
-DiagnosticsTest.prototype.accessWebcam = function(webcam) {
-  // Attempt to access webcam
-  // If error, put meaningful and human-readable error message in this.errors
-}
-
-DiagnosticsTest.prototype.displayWebcam = function(webcam, display_element) {
-  // Attempt to display the webcam feed localling in specified display_element
-
-  // If error, put meaningful and human-readable error message in this.errors
-}
-
 DiagnosticsTest.prototype.echoWebcam = function(webcam, echo_element) {
   // Attempt to use WebRTC to echo back locally to ourselves
   // Ask if user can see the echoed back feed
-  // If error, put meaningful and human-readable error message in this.errors
-}
-
-DiagnosticsTest.prototype.accessMicrophone = function(microphone) {
-  // Attempt to access the microphone
   // If error, put meaningful and human-readable error message in this.errors
 }
 
@@ -153,6 +118,15 @@ DiagnosticsTest.prototype.displayMessage = function(message, type) {
   var div_class = "message " + type;
   var html = "<div class='" + div_class + "'><p>" + message + "</p></div>";
   return html;
+}
+
+DiagnosticsTest.prototype.webcamLiveLabel = function() {
+  // Go through each object and make sure we grab and return the live feed only.
+  for (var i = 0; i < this.webcamStream.length - 1; i++) {
+    if (this.webcamStream[i].readyState == 'live') {
+      return this.webcamStream[i].label;
+    }
+  }
 }
 
 // Will create a feedback display bar. You must insert it somewhere.

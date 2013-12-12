@@ -4,8 +4,8 @@
     %title Mojo Lingo WebRTC Diagnostics Tool
     %link{ href: "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css", rel: "stylesheet"}
     = stylesheet_link_tag "style"
-    %script{ src: "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"}
     %script{ src: "//code.jquery.com/jquery-1.10.2.min.js" }
+    %script{ src: "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"}
     %script{ src: "/javascripts/mojo_lingo_diagnostics_test.js" }
     %script{ src: "/javascripts/scripts.js" }
   %body
@@ -28,6 +28,9 @@
                 .test-messages
                 %p Overall info here
               #local.tab-pane
+                .test-webcam-message
+                %video.test-webcam{ width: 640, height: 480, autoplay: true}
+                .test-microphone
                 %p Local info here
               #external.tab-pane
                 %p External info here
