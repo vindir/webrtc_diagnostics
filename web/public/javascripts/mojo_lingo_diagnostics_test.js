@@ -2,10 +2,22 @@ var error_event = new Event('error_event');
 var passing_event = new Event('passing_event');
 var warning_event = new Event('warning_event');
 
-var webcam_access = new Event('webcam_access');
+var webrtc_checking = new Event('webrtc_checking');
+var webrtc_pass = new Event('webrtc_pass');
+var webrtc_fail = new Event('webrtc_fail');
+var webrtc_end = new Event('webrtc_end');
+
+var webcam_checking = new Event('webcam_checking');
+var webcam_pass = new Event('webcam_pass');
+var webcam_fail = new Event('webcam_fail');
+var webcam_end = new Event('webcam_end');
+
+var microphone_checking = new Event('microphone_checking');
+
+var local_video_stream_checking = new Event('local_video_stream_checking');
+var local_video_stream_pass = new Event('local_video_stream_pass');
+var local_video_stream_fail = new Event('local_video_stream_fail');
 var local_video_stream_end = new Event('local_video_stream_end');
-var local_video_stream_works = new Event('local_video_stream_works');
-var local_video_stream_fails = new Event('local_video_stream_fails');
 
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia; // So we don't have to keep checking for vendor prefixes.
 var vendorURL = window.URL || window.webkitURL;
@@ -23,13 +35,17 @@ function DiagnosticsTest() {
 }
 
 DiagnosticsTest.prototype.testWebRTCReadiness = function() {
+  document.dispatchEvent(webrtc_checking);
   if (!!getUserMedia) {
     this.passing.push("Using a WebRTC-enabled browser.");
     document.dispatchEvent(passing_event);
+    document.dispatchEvent(webrtc_pass);
   } else {
     this.errors.push("Not using a WebRTC-enabled browser.");
     document.dispatchEvent(erorr_event);
+    document.dispatchEvent(webrtc_fail);
   }
+  document.dispatchEvent(webrtc_end);
   return !!getUserMedia;
 }
 
@@ -42,6 +58,7 @@ DiagnosticsTest.prototype.testWebRTCReadiness = function() {
 
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getWebcam = function() {
+  document.dispatchEvent(webcam_checking);
   var scope = this;
   var result = null;
   var constraints = { video: true };
@@ -50,12 +67,15 @@ DiagnosticsTest.prototype.getWebcam = function() {
     scope.webcamStream = stream;
     scope.passing.push("Webcam reached: " + scope.webcamLiveLabel());
     document.dispatchEvent(passing_event);
-    document.dispatchEvent(webcam_access);
+    document.dispatchEvent(webcam_pass);
+    document.dispatchEvent(webcam_end);
     result = true;
   }, function() {
     // Failure
     scope.errors.push("Unable to reach a webcam. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
+    document.dispatchEvent(webcam_fail);
+    document.dispatchEvent(webcam_end);
     result = false;
   });
   return result;
@@ -87,6 +107,7 @@ DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
   //   video_source = stream;
   // }
   // display_element.src = video_source;
+  document.dispatchEvent(local_video_stream_checking);
   var velem = document.getElementById('local-webcam');
   velem.src = vendorURL.createObjectURL(this.webcamStream);
 }
@@ -109,13 +130,13 @@ DiagnosticsTest.prototype.videoCheck = function(display_element) {
   $('.video-check-wrapper > button.yes').click(function() {
     scope.passing.push("Video play back works.<img class='message-local-webcam-image' />");
     document.dispatchEvent(passing_event);
-    document.dispatchEvent(local_video_stream_works);
+    document.dispatchEvent(local_video_stream_pass);
     document.dispatchEvent(local_video_stream_end);
   });
   $('.video-check-wrapper > button.no').click(function() {
     scope.errors.push("Video play back failed.");
     document.dispatchEvent(error_event);
-    document.dispatchEvent(local_video_stream_fails);
+    document.dispatchEvent(local_video_stream_fail);
     document.dispatchEvent(local_video_stream_end);
   });
 }

@@ -34,4 +34,19 @@
               #external.tab-pane
                 %p External info here
               #logs.tab-pane
+                .messages
             #test-checklist
+              .webrtc.waiting Check for WebRTC readiness.
+              .webcam.waiting Check for available webcam.
+              .microphone.waiting Check for available microphone.
+              .webcam-playback.waiting Check to make sure local webcam playback works.
+              .microphone-playback.waiting Check to make sure local microphone playback works.
+              .webcam-echo.waiting Check to make sure local webcam echo works.
+              .microphone-echo.waiting Check to make sure local microphone echo works.
+              .remote-connect.waiting Check to make sure we can access a remote client.
+              .score
+                %b Score:
+                .passing 0
+                .slash /
+                .total 8
+

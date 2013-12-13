@@ -16,6 +16,34 @@ ul.nav.nav-tabs {
   padding: 10px;
 }
 
+#test-checklist .waiting {
+color: #bbb;
+font-style: italic;
+}
+
+#test-checklist .passed {
+  color: green;
+  /*font-weight: bold;*/
+}
+
+#test-checklist .failed {
+  color: rgb(172, 36, 36);
+  /*font-weight: bold;*/
+}
+
+#test-checklist .checking {
+  font-weight: bold;
+}
+
+.score {
+  text-align: center;
+}
+
+.score > * {
+  display: inline-block;
+  padding: 3px;
+}
+
 .tabbable {
   margin-top: 20px;
 }

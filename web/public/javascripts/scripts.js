@@ -1,4 +1,5 @@
 var tests = new Array();
+var passing = 0;
 
 // Visual UI stuff, and then run the first test.
 $(window).ready(function() {
@@ -36,21 +37,72 @@ function adjust_test_checklist_size() {
   $('#test-checklist').css({ height: calc_height + 'px', width: calc_width + 'px', top: calc_top, left: tab_position.left });
 }
 
+function update_passing() {
+  $('#test-checklist .score .passing').innerHTML(passing);
+}
+
 function runDiagnosticsTest(test_object) {
   document.addEventListener('error_event', function() {
-    $('#test-checklist').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
+    $('#logs .messages').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
   }, false);
 
   document.addEventListener('passing_event', function() {
-    $('#test-checklist').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
+    $('#logs .messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
   }, false);
 
-  document.addEventListener('webcam_access', function() {
+  document.addEventListener('webrtc_checking', function() {
+    $('#test-checklist .webrtc').addClass('checking').removeClass('waiting');
+  });
+
+  document.addEventListener('webrtc_pass', function () {
+    $('#test-checklist .webrtc').addClass('passed').removeClass('checking');
+  })
+
+  document.addEventListener('webrtc_fail', function() {
+    $('#test-checklist .webrtc').addClass('failed').removeClass('checking');
+  });
+
+  document.addEventListener('webcam_checking', function() {
+    $('#test-checklist .webcam').addClass('checking').removeClass('waiting');
+  });
+
+  document.addEventListener('webcam_pass', function() {
     // Now that we've accessed the webcam, switch to the local tab for video display.
     $('.test-local-webcam-message').append(test_object.displayMessage('Attempting to display webcam ' + test_object.webcamLiveLabel() + '.', 'warning'));
     test_object.testWebcamLocal($('#local-webcam'));
     $('a[href=#local]').tab('show');
     test_object.videoCheck($('video#local-webcam'));
+    $('#test-checklist .webcam').removeClass('checking').addClass('passed');
+  });
+
+  document.addEventListener('webcam_fail', function () {
+    $('#test-checklist .webcam').removeClass('checking').addClass('failed');
+  });
+
+  document.addEventListener('microphone_checking', function() {
+    $('#test-checklist .microphone').addClass('checking').removeClass('waiting');
+  });
+
+  document.addEventListener('microphone_pass', function() {
+    $('#test-checklist .microphone').addClass('passed').removeClass('checking');
+  });
+
+  document.addEventListener('microphone_fail', function() {
+    $('#test-checklist .microphone').addClass('failed').removeClass('checking');
+  });
+
+  document.addEventListener('local_video_stream_checking', function() {
+    $('#test-checklist .webcam-playback').addClass('checking').removeClass('waiting');
+  });
+
+  document.addEventListener('local_video_stream_pass', function() {
+    $('a[href=#overall]').tab('show');
+    $('#local .span12').addClass('span9').removeClass('span12');
+    $('#local .span9').after('<div class="span3"></div>');
+    $('#local .span3').append('<canvas id="local-webcam-canvas"></canvas><p>' + test_object.webcamLiveLabel() + '</p><img class="local-webcam-image" />');
+    // and then take a picture of the camera, stop the stream, and remove the buttons
+    test_object.pictureWebcamLocal(null);
+    $('#test-checklist .webcam-playback').addClass('passed').removeClass('failed');
   });
 
   document.addEventListener('local_video_stream_end', function() {
@@ -62,17 +114,8 @@ function runDiagnosticsTest(test_object) {
     $('.test-local-webcam-message').hide();
   });
 
-  document.addEventListener('local_video_stream_works', function() {
-    $('a[href=#overall]').tab('show');
-    $('#local .span12').addClass('span9').removeClass('span12');
-    $('#local .span9').after('<div class="span3"></div>');
-    $('#local .span3').append('<canvas id="local-webcam-canvas"></canvas><p>' + test_object.webcamLiveLabel() + '</p><img class="local-webcam-image" />');
-    // and then take a picture of the camera, stop the stream, and remove the buttons
-    test_object.pictureWebcamLocal(null);
-  });
-
-  document.addEventListener('local_video_stream_fails', function() {
-
+  document.addEventListener('local_video_stream_fail', function() {
+    $('#test-checklist .webcam-playback').addClass('failed').removeClass('checking');
     // stop the stream and remove the buttons
   });
 
