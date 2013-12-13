@@ -3,10 +3,12 @@ var passing_event = new Event('passing_event');
 var warning_event = new Event('warning_event');
 
 var webcam_access = new Event('webcam_access');
+var local_video_stream_end = new Event('local_video_stream_end');
 var local_video_stream_works = new Event('local_video_stream_works');
 var local_video_stream_fails = new Event('local_video_stream_fails');
 
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia; // So we don't have to keep checking for vendor prefixes.
+var vendorURL = window.URL || window.webkitURL;
 
 function DiagnosticsTest() {
   this.webcams = null; // Should hold an array of webcam names
@@ -79,14 +81,23 @@ DiagnosticsTest.prototype.getMicrophone = function() {
 
 DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
   // var video_source = null;
-  // if (window.webkitURL) {
-  //   video_source = window.webkitURL.createObjectURL(this.webcamStream);
+  // if (vendorURL) {
+  //   video_source = vendorURL.createObjectURL(this.webcamStream);
   // } else {
   //   video_source = stream;
   // }
   // display_element.src = video_source;
   var velem = document.getElementById('local-webcam');
-  velem.src = window.webkitURL.createObjectURL(this.webcamStream);
+  velem.src = vendorURL.createObjectURL(this.webcamStream);
+}
+
+DiagnosticsTest.prototype.pictureWebcamLocal = function(display_element) {
+  canvas = document.querySelector('#local-webcam-canvas');
+  canvas.width = 640;
+  canvas.height = 480;
+  canvas.getContext('2d').drawImage(document.querySelector('#local-webcam'), 0, 0, 640, 480);
+  var data = canvas.toDataURL('image/png');
+  document.querySelector('#local-webcam-photo').setAttribute('src', data);
 }
 
 DiagnosticsTest.prototype.videoCheck = function(display_element) {
@@ -103,6 +114,7 @@ DiagnosticsTest.prototype.videoCheck = function(display_element) {
     document.dispatchEvent(error_event);
     document.dispatchEvent(local_video_stream_fails);
   });
+  document.dispatchEvent(local_video_stream_end);
 }
 
 DiagnosticsTest.prototype.testWebcamEcho = function(display_element) {

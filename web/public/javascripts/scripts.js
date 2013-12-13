@@ -34,19 +34,27 @@ function runDiagnosticsTest(test_object) {
 
   document.addEventListener('webcam_access', function() {
     // Now that we've accessed the webcam, switch to the local tab for video display.
-    $('.test-webcam-message').append(test_object.displayMessage('Attempting to display webcam ' + test_object.webcamLiveLabel() + '.', 'warning'));
+    $('.test-local-webcam-message').append(test_object.displayMessage('Attempting to display webcam ' + test_object.webcamLiveLabel() + '.', 'warning'));
     test_object.testWebcamLocal($('#local-webcam'));
     $('a[href=#local]').tab('show');
     test_object.videoCheck($('video#local-webcam'));
   });
 
+  document.addEventListener('local_video_stream_end', function() {
+    $('a[href=#overall]').tab('show');
+  });
+
   document.addEventListener('local_video_stream_works', function() {
     $('a[href=#overall]').tab('show');
+    $('#local .span12').addClass('span10').removeClass('.span12');
+    $('#local .span10').after('<div class="span2"></div>');
+    $('#local .span2').append('<canvas id="local-webcam-canvas"></canvas><img id="local-webcam-image" />');
     // and then take a picture of the camera, stop the stream, and remove the buttons
+    test_object.pictureWebcamLocal(null);
   });
 
   document.addEventListener('local_video_stream_fails', function() {
-    $('a[href=#overall]').tab('show');
+
     // stop the stream and remove the buttons
   });
 
