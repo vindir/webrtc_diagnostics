@@ -97,7 +97,9 @@ DiagnosticsTest.prototype.pictureWebcamLocal = function(display_element) {
   canvas.height = 480;
   canvas.getContext('2d').drawImage(document.querySelector('#local-webcam'), 0, 0, 640, 480);
   var data = canvas.toDataURL('image/png');
-  document.querySelector('#local-webcam-photo').setAttribute('src', data);
+  $(canvas).hide();
+  document.querySelector('.message-local-webcam-image').setAttribute('src', data);
+  document.querySelector('.local-webcam-image').setAttribute('src', data);
 }
 
 DiagnosticsTest.prototype.videoCheck = function(display_element) {
@@ -105,16 +107,17 @@ DiagnosticsTest.prototype.videoCheck = function(display_element) {
   var check_wrapper = "<div class='video-check-wrapper'><p>Can you see this video?</p><button class='yes'>yes</button><button class='no'>no</button></div>";
   $('video#local-webcam').after($(check_wrapper));
   $('.video-check-wrapper > button.yes').click(function() {
-    scope.passing.push("Video play back works.");
+    scope.passing.push("Video play back works.<img class='message-local-webcam-image' />");
     document.dispatchEvent(passing_event);
     document.dispatchEvent(local_video_stream_works);
+    document.dispatchEvent(local_video_stream_end);
   });
   $('.video-check-wrapper > button.no').click(function() {
     scope.errors.push("Video play back failed.");
     document.dispatchEvent(error_event);
     document.dispatchEvent(local_video_stream_fails);
+    document.dispatchEvent(local_video_stream_end);
   });
-  document.dispatchEvent(local_video_stream_end);
 }
 
 DiagnosticsTest.prototype.testWebcamEcho = function(display_element) {

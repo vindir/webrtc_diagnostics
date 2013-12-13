@@ -42,13 +42,18 @@ function runDiagnosticsTest(test_object) {
 
   document.addEventListener('local_video_stream_end', function() {
     $('a[href=#overall]').tab('show');
+    // Remove buttons
+    $('.video-check-wrapper').remove();
+    // Hide local video element and message
+    $('video#local-webcam').hide();
+    $('.test-local-webcam-message').hide();
   });
 
   document.addEventListener('local_video_stream_works', function() {
     $('a[href=#overall]').tab('show');
-    $('#local .span12').addClass('span10').removeClass('.span12');
-    $('#local .span10').after('<div class="span2"></div>');
-    $('#local .span2').append('<canvas id="local-webcam-canvas"></canvas><img id="local-webcam-image" />');
+    $('#local .span12').addClass('span9').removeClass('span12');
+    $('#local .span9').after('<div class="span3"></div>');
+    $('#local .span3').append('<canvas id="local-webcam-canvas"></canvas><p>' + test_object.webcamLiveLabel() + '</p><img class="local-webcam-image" />');
     // and then take a picture of the camera, stop the stream, and remove the buttons
     test_object.pictureWebcamLocal(null);
   });

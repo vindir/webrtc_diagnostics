@@ -44,6 +44,14 @@ ul.nav.nav-tabs {
   border-color: transparent !important;
 }
 
+.message p img {
+  display: block;
+  height: 25%;
+  width: 25%;
+  border: 3px solid #eee;
+  margin: 6px 0;
+}
+
 .message.passing > p {
   color: green;
 }
@@ -66,4 +74,9 @@ video {
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;
+}
+
+.tab-pane .row-fluid {
+  position: relative;
+  right: 13px;
 }
