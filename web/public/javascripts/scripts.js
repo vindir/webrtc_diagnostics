@@ -6,6 +6,8 @@ $(window).ready(function() {
   $('.nav.nav-tabs a').tab();
   // Make sure the main content pane is tall enough
   adjust_content_pane_height();
+  // Make sure our checklist is size and positioned properly
+  adjust_test_checklist_size();
   // Create a new initial test instance
   tests.push(new DiagnosticsTest());
   // Run the new initial test instance
@@ -14,6 +16,7 @@ $(window).ready(function() {
 
 $(window).resize(function() {
   adjust_content_pane_height();
+  adjust_test_checklist_size();
 });
 
 //Adjust height of elements on the page.
@@ -23,13 +26,23 @@ function adjust_content_pane_height() {
   $('.tab-content').height(page_height - content_position.top - 20);
 }
 
+function adjust_test_checklist_size() {
+  var tab_height = $('.nav.nav-tabs').outerHeight(true)
+  var tab_position = $('.nav.nav-tabs').position();
+
+  var calc_height = $('.tab-content').outerHeight() - tab_height - 20; // Subtract double the padding
+  var calc_width = $('.nav.nav-tabs').width() - 20; // Subtract double the padding
+  var calc_top = tab_position.top + tab_height;
+  $('#test-checklist').css({ height: calc_height + 'px', width: calc_width + 'px', top: calc_top, left: tab_position.left });
+}
+
 function runDiagnosticsTest(test_object) {
   document.addEventListener('error_event', function() {
-    $('.test-messages').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
+    $('#test-checklist').append(test_object.displayMessage(test_object.errors[test_object.errors.length - 1], 'error'));
   }, false);
 
   document.addEventListener('passing_event', function() {
-    $('.test-messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
+    $('#test-checklist').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
   }, false);
 
   document.addEventListener('webcam_access', function() {

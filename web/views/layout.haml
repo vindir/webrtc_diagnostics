@@ -18,16 +18,13 @@
           .tabbable.tabs-left
             %ul.nav.nav-tabs
               %li.active
-                %a{ href: '#overall', data: { toggle: 'tab' } } Overall
-              %li
                 %a{ href: '#local', data: { toggle: 'tab' } } Local
               %li
                 %a{ href: '#external', data: { toggle: 'tab' } } External
+              %li
+                %a{ href: '#logs', data: { toggle: 'tab' } } Logs
             .tab-content
-              #overall.tab-pane.active
-                .test-messages
-                %p Overall info here
-              #local.tab-pane
+              #local.tab-pane.active
                 .row-fluid
                   .span12
                     .test-local-microphone-message
@@ -36,3 +33,5 @@
                     %video#local-webcam{ width: 640, height: 480, autoplay: true}
               #external.tab-pane
                 %p External info here
+              #logs.tab-pane
+            #test-checklist

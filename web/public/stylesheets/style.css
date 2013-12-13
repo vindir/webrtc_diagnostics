@@ -5,6 +5,15 @@ body {
 
 ul.nav.nav-tabs {
   border-right: 0;
+  width: 200px;
+  text-align: right;
+  letter-spacing: 3px;
+}
+
+#test-checklist {
+  position: absolute;
+  background-color: blanchedalmond;
+  padding: 10px;
 }
 
 .tabbable {
@@ -46,9 +55,6 @@ ul.nav.nav-tabs {
 
 .message p img {
   display: block;
-  height: 25%;
-  width: 25%;
-  border: 3px solid #eee;
   margin: 6px 0;
 }
 
