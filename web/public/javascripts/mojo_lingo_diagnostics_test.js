@@ -13,6 +13,9 @@ var webcam_fail = new Event('webcam_fail');
 var webcam_end = new Event('webcam_end');
 
 var microphone_checking = new Event('microphone_checking');
+var microphone_pass = new Event('microphone_pass');
+var microphone_fail = new Event('microphone_fail');
+var microphone_end = new Event('microphone_end');
 
 var local_video_stream_checking = new Event('local_video_stream_checking');
 var local_video_stream_pass = new Event('local_video_stream_pass');
@@ -83,20 +86,27 @@ DiagnosticsTest.prototype.getWebcam = function() {
 
 // This is all we have to play with for now.
 DiagnosticsTest.prototype.getMicrophone = function() {
+  document.dispatchEvent('microphone_checking');
   var scope = this;
   var constraints = { audio: true };
+  var result = null;
   getUserMedia.call(navigator, constraints, function(stream) {
     // Success
     scope.microphoneStream = stream;
     scope.passing.push("Able to reach a microphone.");
     document.dispatchEvent(passing_event);
-    return true;
+    document.dispatchEvent(microphone_pass);
+    document.dispatchEvent(microphone_end);
+    result = true;
   }, function() {
     // Failure
     scope.errors.push("Unable to reach a microphone. Did you allow access? Is there one plugged in? Is it enabled?");
     document.dispatchEvent(error_event);
-    return false;
+    document.dispatchEvent(microphone_fail);
+    document.dispatchEvent(microphone_end);
+    result = false;
   });
+  return result;
 }
 
 DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
