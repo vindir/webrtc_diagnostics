@@ -37,8 +37,9 @@ function adjust_test_checklist_size() {
   $('#test-checklist').css({ height: calc_height + 'px', width: calc_width + 'px', top: calc_top, left: tab_position.left });
 }
 
-function update_passing() {
-  $('#test-checklist .score .passing').innerHTML(passing);
+function increase_passing() {
+  passing++;
+  $('#test-checklist .score .passing').html(passing);
 }
 
 function runDiagnosticsTest(test_object) {
@@ -48,6 +49,7 @@ function runDiagnosticsTest(test_object) {
 
   document.addEventListener('passing_event', function() {
     $('#logs .messages').append(test_object.displayMessage(test_object.passing[test_object.passing.length - 1], 'passing'));
+    increase_passing();
   }, false);
 
   document.addEventListener('webrtc_checking', function() {
@@ -102,7 +104,7 @@ function runDiagnosticsTest(test_object) {
     $('#local .span3').append('<canvas id="local-webcam-canvas"></canvas><p>' + test_object.webcamLiveLabel() + '</p><img class="local-webcam-image" />');
     // and then take a picture of the camera, stop the stream, and remove the buttons
     test_object.pictureWebcamLocal(null);
-    $('#test-checklist .webcam-playback').addClass('passed').removeClass('failed');
+    $('#test-checklist .webcam-playback').addClass('passed').removeClass('checking');
   });
 
   document.addEventListener('local_video_stream_end', function() {

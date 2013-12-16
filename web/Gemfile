@@ -4,4 +4,5 @@ gem "sinatra"
 gem "sinatra_more", :require => "sinatra_more/markup_plugin"
 gem "thin"
 gem "haml"
+gem "sass"
 gem 'sinatra-assetpack', :require => 'sinatra/assetpack'

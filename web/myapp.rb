@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'bundler'
-require 'coffee-script'
+require 'sass'
 
 Bundler.require
 
@@ -14,7 +14,6 @@ get '/' do
   haml :index, :layout => :layout
 end
 
-get '/scripts.js' do
-  content_type "text/javascript"
-  coffee :scripts
+get '/sssymboliconsblock.css' do
+  scss :sssymboliconsblock
 end

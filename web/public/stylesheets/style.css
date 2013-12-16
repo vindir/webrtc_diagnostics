@@ -26,6 +26,11 @@ font-style: italic;
   /*font-weight: bold;*/
 }
 
+/*#test-checklist .passed:before {
+  content: "mic";
+  font-family: "SSSymbolicons";
+}*/
+
 #test-checklist .failed {
   color: rgb(172, 36, 36);
   /*font-weight: bold;*/
@@ -94,7 +99,7 @@ font-style: italic;
   color: rgb(172, 36, 36);
 }
 
-video {
+video.active {
   border: 8px solid rgb(221, 221, 221);
 }
 

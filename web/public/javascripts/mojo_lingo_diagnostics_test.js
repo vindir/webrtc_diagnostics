@@ -84,9 +84,9 @@ DiagnosticsTest.prototype.getWebcam = function() {
   return result;
 }
 
-// This is all we have to play with for now.
+
 DiagnosticsTest.prototype.getMicrophone = function() {
-  document.dispatchEvent('microphone_checking');
+  document.dispatchEvent(microphone_checking);
   var scope = this;
   var constraints = { audio: true };
   var result = null;
@@ -96,17 +96,21 @@ DiagnosticsTest.prototype.getMicrophone = function() {
     scope.passing.push("Able to reach a microphone.");
     document.dispatchEvent(passing_event);
     document.dispatchEvent(microphone_pass);
-    document.dispatchEvent(microphone_end);
     result = true;
-  }, function() {
+  }, function(e) {
     // Failure
-    scope.errors.push("Unable to reach a microphone. Did you allow access? Is there one plugged in? Is it enabled?");
+    console.log(e);
+    scope.errors.push("Unable to reach a microphone: " + e.name);
     document.dispatchEvent(error_event);
     document.dispatchEvent(microphone_fail);
     document.dispatchEvent(microphone_end);
     result = false;
   });
   return result;
+}
+
+DiagnosticsTest.prototype.testMicrophoneLocal = function() {
+
 }
 
 DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
@@ -119,6 +123,7 @@ DiagnosticsTest.prototype.testWebcamLocal = function(display_element) {
   // display_element.src = video_source;
   document.dispatchEvent(local_video_stream_checking);
   var velem = document.getElementById('local-webcam');
+  $(velem).addClass('active');
   velem.src = vendorURL.createObjectURL(this.webcamStream);
 }
 
